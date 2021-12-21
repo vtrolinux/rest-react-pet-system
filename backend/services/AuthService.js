@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const createToken = require('../helpers/create-token')
 const bcrypt = require('bcrypt')
 
 module.exports = class AuthService {
@@ -24,7 +25,8 @@ module.exports = class AuthService {
 
         try {
             const newUser = await user.save()
-            return {newUser}
+            const {token, userId} = await createToken(newUser)
+            return {token, userId}
         } catch (error) {
             return 'Erro ao registrar usuario'
         } 

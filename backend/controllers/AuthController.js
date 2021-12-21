@@ -9,15 +9,17 @@ module.exports = class AuthController {
 
         try {
             const AuthServiceInstance = new AuthService()
-            const {newUser, message} = await AuthServiceInstance.serviceRegister(name, email, phone, password, confirmpassword)
+            const {token, userId, message} = await AuthServiceInstance.serviceRegister(name, email, phone, password, confirmpassword)
             if(message){
                 return res.status(422).json({ message: message })     
             }
-            return res.json({ message: "voce se cadastrou!", newUser: newUser })
+            return res.json({ message: "voce se cadastrou!", userId: userId ,token: token })
         } catch (error) {
             return res.status(422).json({message: 'falha ao registrar usuario no sistema' })
-        }
+        }   
+    }
+    static async login(req, res){
+        const {email, password} = req.body
 
-        
     }
 }
