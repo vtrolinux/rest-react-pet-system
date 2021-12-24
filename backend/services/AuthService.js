@@ -31,4 +31,21 @@ module.exports = class AuthService {
             return 'Erro ao registrar usuario'
         } 
     }
+    async serviceLogin(email, password){
+        console.log('login service: '+email)
+        const user = await User.findOne({ email: email })
+        if (user == null) {
+            return {message: 'nao  existe usuario cadastrado com este email'}
+        }
+        //check match senha
+        const checkPassword = await bcrypt.compare(password, user.password)
+
+        if (!checkPassword) {
+            return {message: 'senha inválida'}
+        }
+        
+        const {token, userId} = await createToken(user)
+
+        return {token,userId}
+    }
 }

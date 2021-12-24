@@ -19,7 +19,17 @@ module.exports = class AuthController {
         }   
     }
     static async login(req, res){
+        console.log(req.body)
         const {email, password} = req.body
-
+        try {
+            const AuthServiceInstance = new AuthService()
+            const {token, userId,message} = await AuthServiceInstance.serviceLogin(email, password)
+            if(message){
+                return res.status(422).json({ message: message }) 
+            }
+            return res.json({ message: "voce efetuou o login!", token: token, userId: userId})
+        } catch (error) {
+            return res.status(422).json({message: 'falha ao realizar o login' })
+        }  
     }
 }
