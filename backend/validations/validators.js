@@ -49,8 +49,16 @@ const authValidator = (req, res, next) => {
     }
     next()
 }
+const checkExistId = (req, res, next) => {
+    if(!req.params.id){
+        return res.status(422).json({message: 'id nao informado'})
+    }
+    next()
+}
 
 module.exports = {
     registerValidator,
-    loginValidator
+    loginValidator,
+    authValidator,
+    checkExistId
 }

@@ -1,6 +1,5 @@
 const User = require('../models/User')
 const createToken = require('../helpers/create-token')
-const getToken = require('../helpers/get-token')
 const bcrypt = require('bcrypt')
 const decodeToken = require('../helpers/decode-token')
 
@@ -53,7 +52,7 @@ module.exports = class AuthService {
         return {token,userId}
     }
     async serviceCheck(token){
-        
+
         let currentUser
     
         if (token) {
@@ -61,7 +60,7 @@ module.exports = class AuthService {
             console.log('decoded: '+decoded.id)
 
             currentUser = await User.findById(decoded.id, {password: 0, phone:0})
-
+            //currentUser.password = undefined
             console.log(currentUser)
             return {currentUser}
         } else {
