@@ -1,6 +1,9 @@
 const User = require('../models/User')
 const createToken = require('../helpers/create-token')
+const getToken = require('../helpers/get-token')
 const bcrypt = require('bcrypt')
+const decodeToken = require('../helpers/decode-token')
+
 
 module.exports = class AuthService {
 
@@ -41,11 +44,28 @@ module.exports = class AuthService {
         const checkPassword = await bcrypt.compare(password, user.password)
 
         if (!checkPassword) {
+            //throw new Error('SENHA INVALIDA')
             return {message: 'senha inválida'}
         }
-        
+
         const {token, userId} = await createToken(user)
 
         return {token,userId}
+    }
+    async serviceCheck(token){
+        
+        let currentUser
+    
+        if (token) {
+            const decoded = await decodeToken(token)
+            console.log('decoded: '+decoded.id)
+
+            currentUser = await User.findById(decoded.id, {password: 0, phone:0})
+
+            console.log(currentUser)
+            return {currentUser}
+        } else {
+            currentUser = null
+        }
     }
 }

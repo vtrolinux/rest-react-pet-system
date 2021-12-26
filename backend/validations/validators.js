@@ -43,6 +43,12 @@ const loginValidator = (req, res, next) => {
     }
     next()
 }
+const authValidator = (req, res, next) => {
+    if(!req.headers.authorization){
+        return res.status(422).json({ message: 'O token e obrigatorio' })
+    }
+    next()
+}
 
 module.exports = {
     registerValidator,
