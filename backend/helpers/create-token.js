@@ -7,7 +7,7 @@ const createToken = async (user) => {
       name: user.name,
       id: user._id,
     },
-    "nossosecret"
+    'nossosecret'
   )
     return {token: token, userId: user._id}
 }

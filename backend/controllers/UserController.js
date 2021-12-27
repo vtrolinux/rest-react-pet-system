@@ -15,7 +15,21 @@ module.exports = class UserController {
         }
     }
     static async updateUser(req, res){
-        const id = req.params.id
-        return res.status(200).json({message: 'update ok'})
+        const authHeader = req.headers["authorization"]
+        console.log('auth header: '+authHeader)
+        const token = authHeader && authHeader.split(" ")[1]
+        console.log('TOKEN: '+token)
+        const {name, email, phone, password, confirmpassword} = req.body
+
+        try {
+            const UserServiceInstance = new UserService()
+            const {updatedUser, message} = await UserServiceInstance.serviceUpdateUser(token,name, email, phone, password, confirmpassword)
+            if(message){
+                return res.status(422).json({message: message}) 
+            }
+            return res.status(200).json({ updatedUser: updatedUser })
+        } catch (error) {
+            return res.status(422).json({message: 'Erro ao atualizar usuario'}) 
+        }
     }
 }
