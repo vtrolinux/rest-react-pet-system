@@ -1,5 +1,4 @@
 const User = require('../models/User')
-const validator = require('validator')
 const decodeToken = require('../helpers/decode-token')
 
 module.exports = class UserService {
@@ -19,16 +18,16 @@ module.exports = class UserService {
         const userId = decoded.id
         console.log('userId: ' +userId)
         if(!userId){
-            return {message: 'acesso negado!!!!'}
+            return {message: 'acesso negado!'}
         }
         const user = await User.findOne({_id: userId})
         //console.log('userId: '+userId+ ' user._id: '+user._id)
         if(!user){
-            return {message: 'usuario nao encontrado!!'}
+            return {message: 'usuario nao encontrado!'}
         }   
         if(userId != user._id){
             console.log('userId: '+userId+ ' user._id: '+user._id)
-            return {message: 'acesso negado!!!!!'}
+            return {message: 'acesso negado!'}
         }
         //Objeto de update do usuário
         const updateData = {
