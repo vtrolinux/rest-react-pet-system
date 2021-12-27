@@ -20,10 +20,15 @@ module.exports = class UserController {
         const token = authHeader && authHeader.split(" ")[1]
         console.log('TOKEN: '+token)
         const {name, email, phone, password, confirmpassword} = req.body
+        let image = ''
+
+        if (req.file) {
+          image = req.file.filename
+        }
 
         try {
             const UserServiceInstance = new UserService()
-            const {updatedUser, message} = await UserServiceInstance.serviceUpdateUser(token,name, email, phone, password, confirmpassword)
+            const {updatedUser, message} = await UserServiceInstance.serviceUpdateUser(token,name, email, phone, password, confirmpassword, image)
             if(message){
                 return res.status(422).json({message: message}) 
             }

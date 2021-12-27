@@ -13,7 +13,7 @@ module.exports = class UserService {
             return {message: 'usuario nao encontrado'}
         }
     }
-    async serviceUpdateUser(token, name, email, phone, password, confirmpassword){
+    async serviceUpdateUser(token, name, email, phone, password, confirmpassword, image){
 
         const decoded = await decodeToken(token)
         const userId = decoded.id
@@ -52,6 +52,10 @@ module.exports = class UserService {
             const passwordHash = await bcrypt.hash(password, salt)
             //adiciona senha ao update
             updateData.password = passwordHash
+        }
+        if (image) {
+            const imageName = req.file.filename
+            updateData.image = imageName
         }
 
         // persist update
