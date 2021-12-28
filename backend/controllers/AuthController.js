@@ -1,6 +1,5 @@
 const AuthService = require('../services/AuthService')
 
-
 module.exports = class AuthController {
 
     static async register(req, res) {

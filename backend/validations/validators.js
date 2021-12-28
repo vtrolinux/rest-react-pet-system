@@ -1,4 +1,5 @@
 const validator = require('validator')
+//can be much improved, glhf
 
 const registerValidator = (req, res, next) => {
 
@@ -55,10 +56,35 @@ const checkExistId = (req, res, next) => {
     }
     next()
 }
+const createValidator = (req, res, next) => {
+    const {name, age, weight, color} = req.body
+    const images = req.file
+
+    // validations
+    if (!name) {
+        return res.status(422).json({ message: 'O nome é obrigatório!' })     
+    }
+    if (!age) {
+        return res.status(422).json({ message: 'A idade é obrigatória!' })   
+    }
+    if (!weight) {
+        return res.status(422).json({ message: 'O peso é obrigatório!' })
+    }
+    if (!color) {
+        return res.status(422).json({ message: 'A cor é obrigatória!' })       
+    } 
+    /*
+    if (!images) {
+        return res.status(422).json({ message: 'A imagem é obrigatória!' })      
+    }
+    */
+    next()
+}
 
 module.exports = {
     registerValidator,
     loginValidator,
     authValidator,
-    checkExistId
+    checkExistId,
+    createValidator
 }
