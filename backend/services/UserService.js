@@ -53,8 +53,8 @@ module.exports = class UserService {
             updateData.password = passwordHash
         }
         if (image) {
-            const imageName = req.file.filename
-            updateData.image = imageName
+            console.log('image service: '+image)          
+            updateData.image = image
         }
 
         // persist update

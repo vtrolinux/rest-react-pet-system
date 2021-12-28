@@ -15,6 +15,7 @@ module.exports = class UserController {
         }
     }
     static async updateUser(req, res){
+        
         const authHeader = req.headers["authorization"]
         console.log('auth header: '+authHeader)
         const token = authHeader && authHeader.split(" ")[1]
@@ -23,7 +24,8 @@ module.exports = class UserController {
         let image = ''
 
         if (req.file) {
-          image = req.file.filename
+            image = req.file.filename
+            console.log(image)
         }
 
         try {
