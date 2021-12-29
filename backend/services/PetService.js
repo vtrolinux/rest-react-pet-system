@@ -36,6 +36,9 @@ module.exports = class PetService {
                 phone: user.phone
             }
         })
+        images.map((image) => {
+            dataPetCreate.images.push(image.filename)
+        })
         //persist
         try {
             const newPet = await dataPetCreate.save()
