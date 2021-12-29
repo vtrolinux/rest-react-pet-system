@@ -3,6 +3,7 @@ const authValidators = require('../validations/authValidators')
 module.exports = class AuthController {
 
     static async register(req, res) {
+        
         console.log(req.body)
         const {name, email, phone, password, confirmpassword} = req.body
 
@@ -25,8 +26,10 @@ module.exports = class AuthController {
         }   
     }
     static async login(req, res){
+
         console.log(req.body)
         const {email, password} = req.body
+
         //data validation
         try {
             authValidators.loginValidator(email, password)
@@ -47,22 +50,17 @@ module.exports = class AuthController {
         }  
     }
     static async checkAuth(req, res){
-        console.log(req.headers)
-        const authHeader = req.headers["authorization"]
-        console.log('auth header: '+authHeader)
-        const token = authHeader && authHeader.split(" ")[1]
-        console.log('token: '+token)
+
+        const token = getToken(req)
         
         try {
             const AuthServiceInstance = new AuthService()
-            //console.log(req.headers.authorization)
-            const currentUser = await AuthServiceInstance.serviceCheck(token)
+            const {currentUser, message} = await AuthServiceInstance.serviceCheckAuth(token)
+            if(message){return res.status(422).json({ message: message })}
 
             return res.status(200).json({message: 'ok', user: currentUser})
         } catch (error) {
             return res.status(422).json({message: 'falha de verificacao' })
         }
-
     }
-
 }

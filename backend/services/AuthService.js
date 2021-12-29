@@ -51,15 +51,18 @@ module.exports = class AuthService {
 
         return {token,userId}
     }
-    async serviceCheck(token){
+    async serviceCheckAuth(token){
 
         let currentUser
     
         if (token) {
             const decoded = await decodeToken(token)
             console.log('decoded: '+decoded.id)
-
+            
             currentUser = await User.findById(decoded.id, {password: 0, phone:0})
+            if(currentUser == null){
+                return { message: 'usuario nao encontrado' }
+            }
             //currentUser.password = undefined
             console.log(currentUser)
             return {currentUser}

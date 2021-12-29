@@ -9,7 +9,7 @@ const registerValidator = (name, email, phone, password, confirmpassword) => {
     if (!email) {
         throw new Error('O e-mail é obrigatório!')
     }
-    if (validator.isEmail(email)===false) {
+    if (validator.isEmail(email) === false) {
         throw new Error('o campo informado nao e um email valido!')
     }
     if (!phone) {
@@ -27,8 +27,6 @@ const registerValidator = (name, email, phone, password, confirmpassword) => {
     }
 }
 const loginValidator = (email, password) => {
-
-    //const {email, password} = req.body
 
     if (!email) {
         throw new Error('O e-mail é obrigatório!')  

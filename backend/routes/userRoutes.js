@@ -1,9 +1,7 @@
 const router = require('express').Router()
 const UserController = require('../controllers/UserController')
-
 //midlewares
 const checkToken = require('../middlewares/check-token')
-
 //helpers
 const {imageUpload} = require('../helpers/upload-image')
 
