@@ -56,4 +56,30 @@ module.exports = class PetService {
             return {message: 'Falha ao buscar por pets!'}
         }
     }
+    async serviceGetAllUserPets(token){
+        const decoded = decodeToken(token)
+        const userId = decoded.id
+        console.log('userId: ' +userId)
+        
+        if(!userId){
+            return {message: 'acesso negado!'}
+        }
+        const user = await User.findOne({_id: userId})
+        
+        if(!user){
+            return { message: 'usuario nao encontrado!' }
+        }   
+        if(userId != user._id){
+            console.log('userId: '+userId+ ' user._id: '+user._id)
+            return { message: 'acesso negado!' }
+        }
+        
+        try {        
+            const pets = await Pet.find({'user._id': user._id}).sort('-createdAt')//do mais novo para o mais velho
+            console.log(pets)
+            return {pets}
+        } catch (error) {
+            return {message: 'Falha ao buscar por pets!'}
+        }
+    }
 }

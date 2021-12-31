@@ -42,4 +42,17 @@ module.exports = class PetController {
             return res.status(422).json({ message: 'falha buscar por pets' })
         }
     }
+    static async getAllUserPets(req, res){
+        const token = getToken(req)
+        try {
+            const PetServiceInstance = new PetService()
+            const {pets, message} = await PetServiceInstance.serviceGetAllUserPets(token)
+            if(message){
+                return res.status(422).json({ message: message }) 
+            }
+            return res.status(200).json({ pets })
+        } catch (error) {
+            return res.status(422).json({ message: 'falha buscar por pets do usuario' })
+        }
+    }
 }
