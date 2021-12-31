@@ -4,7 +4,7 @@ const decodeToken = require('../helpers/decode-token')
 
 module.exports = class PetService {
 
-    async serviceCreate(name, age, weight, color, available, token){
+    async serviceCreate(name, age, weight, color, images, available, token){
         //get pet ownner
         const decoded = await decodeToken(token)
         const userId = decoded.id

@@ -21,7 +21,7 @@ module.exports = class PetController {
         //service call
         try {
             const PetServiceInstance = new PetService()
-            const {newPet, message} = await PetServiceInstance.serviceCreate(name, age, weight, color, available, token)
+            const {newPet, message} = await PetServiceInstance.serviceCreate(name, age, weight, color, images, available, token)
             if(message){
                 return res.status(422).json({ message: message }) 
             }
