@@ -47,4 +47,13 @@ module.exports = class PetService {
             return {message: 'Falha ao registrar o pet'}
         }
     }
+    
+    async serviceGetAll(){
+        try {
+            const petList = await Pet.find().sort('-createdAt')//do mais novo para o mais velho
+            return {petList}
+        } catch (error) {
+            return {message: 'Falha ao buscar por pets!'}
+        }
+    }
 }

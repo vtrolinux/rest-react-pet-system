@@ -30,4 +30,16 @@ module.exports = class PetController {
             return res.status(422).json({ message: 'falha ao registrar o pet' })
         }           
     }
+    static async getAll(req, res){
+        try {
+            const PetServiceInstance = new PetService()
+            const {petList, message} = await PetServiceInstance.serviceGetAll()
+            if(message){
+                return res.status(422).json({ message: message }) 
+            }
+            return res.status(200).json({ petList })
+        } catch (error) {
+            return res.status(422).json({ message: 'falha buscar por pets' })
+        }
+    }
 }
