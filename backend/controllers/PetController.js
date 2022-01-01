@@ -106,4 +106,28 @@ module.exports = class PetController {
             }
         }
     }
+    static async updatePet(req, res){
+        const token = getToken(req)
+        const id = req.params.id
+        const {name, age, weight, color, available} = req.body 
+        const images = req.files //plural
+        //validator
+        try {
+            petValidator.updateValidator(name, age, weight, color, available, images)
+        } catch (error) {
+            return res.status(422).json({ message: error.message })
+        }
+        //service
+        try {
+            const PetServiceInstance = new PetService()
+            const updatedPet = await PetServiceInstance.serviceUpdatePet(token, id, name, age, weight, color, available, images)
+            return res.status(200).json({updatedPet: updatedPet})
+        } catch (error) {
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
+    }
 }

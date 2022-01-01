@@ -12,5 +12,6 @@ router.get('/mypets', PetController.getAllUserPets)
 router.get('/myadoptions', checkToken, PetController.getMyAdoptions)
 router.get('/:id', PetController.getPetById)
 router.delete('/:id', checkToken, PetController.removePetById)
+router.patch('/edit/:id', checkToken, imageUpload.array('images'), PetController.updatePet)
 
 module.exports = router
