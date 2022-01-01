@@ -146,4 +146,20 @@ module.exports = class PetController {
             }
         }
     }
+    //conclui a doacao user >> adopter
+    static async concludeAdoption(req, res){
+        const id = req.params.id
+        const token = getToken(req)
+        try {
+            const PetServiceInstance = new PetService()
+            await PetServiceInstance.serviceConcludeAdoption(token, id)
+            return res.status(200).json({message: 'voce concluiu a doacao do seu pet.'})
+        } catch (error) {
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
+    }
 }

@@ -182,6 +182,28 @@ module.exports = class PetService {
         } catch (error) {
             throw ({ status: 422, code: 'FAILED_OPERATION', message: 'Falha ao realizar um agendamento!' })
         }
+    }
+    //conclude adoption
+    async serviceConcludeAdoption(token, id){
 
+        const decoded = await decodeToken(token)
+        const user = await getUserByDecodedToken(decoded)
+
+        //check se pet existe
+        const pet = await Pet.findOne({_id: id})
+        if(pet===null){
+            throw ({ status: 404, code: 'PET_NOT_FOUND', message: 'Nao existe pet registrado com este ID ou talvez nao esteja mais disponivel para adocao' })
+        }
+        if(pet.user._id.toString() !== user._id.toString()){
+            throw ({ status: 422, code: 'DENIED_OPERATION', message: 'Operaçao negada' })
+        }
+
+        pet.available = false
+        
+        try {
+            await Pet.findByIdAndUpdate(pet._id, pet)
+        } catch (error) {
+            throw ({ status: 422, code: 'FAILED_OPERATION', message: 'Falha ao adotar pet' })
+        }
     }
 }

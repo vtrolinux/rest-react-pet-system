@@ -15,5 +15,7 @@ router.delete('/:id', checkToken, PetController.removePetById)
 router.patch('/edit/:id', checkToken, imageUpload.array('images'), PetController.updatePet)
 //agendamento de visita para adocao
 router.patch('/schedule/:id', checkToken, PetController.schedule)
+//conclui a doacao para o doador
+router.patch('/conclude/:id', checkToken, PetController.concludeAdoption)
 
 module.exports = router
