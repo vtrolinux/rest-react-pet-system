@@ -88,4 +88,25 @@ module.exports = class PetService {
             throw ({ status: 404, code: 'PET_NOT_FOUND', message: 'Pet nao encontrado, confira o ID!' })
         }
     }
+    async serviceRemovePetById(token, id){
+        const decoded = await decodeToken(token)
+        const user = await getUserByDecodedToken(decoded)
+
+        if(!ObjectId.isValid(id)){
+            throw ({ status: 422, code: 'INVALID_ID', message: 'O id informado não é valido' })
+        }
+        const pet = await Pet.findOne({_id: id})
+        if(pet===null){
+            throw ({ status: 404, code: 'PET_NOT_FOUND', message: 'Nao existe pet registrado com este ID' })
+        }
+        //verifica se o pet a ser deletado pertence ao usuario logado
+        if(pet.user._id.toString() !== user._id.toString()){
+            throw ({ status: 422, code: 'DENIED_OPERATION', message: 'Operaçao negada' })
+        }
+        try {
+            await Pet.findByIdAndRemove(id)
+        } catch (error) {
+            throw ({ status: 422, code: 'FAIL_OPERATION', message: 'falha ao remover o pet' })
+        }
+    }
 }

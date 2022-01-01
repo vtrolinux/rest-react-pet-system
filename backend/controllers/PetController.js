@@ -69,9 +69,9 @@ module.exports = class PetController {
             return res.status(200).json({ pets })
         } catch (error) {
             if(!error.status) {
-                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } });
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
             } else {
-                return res.status(error.status).json( { error: { code: error.code, message: error.message } });
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
             }
         }
     }
@@ -85,9 +85,24 @@ module.exports = class PetController {
             return res.status(200).json({ pet })
         } catch (error) {
             if(!error.status) {
-                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } });
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
             } else {
-                return res.status(error.status).json( { error: { code: error.code, message: error.message } });
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
+    }
+    static async removePetById(req, res){
+        const token = getToken(req)
+        const id = req.params.id
+        try {
+            const PetServiceInstance = new PetService()
+            await PetServiceInstance.serviceRemovePetById(token, id)
+            return res.status(200).json({message: 'Pet removido do sistema'})
+        } catch (error) {
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
             }
         }
     }
