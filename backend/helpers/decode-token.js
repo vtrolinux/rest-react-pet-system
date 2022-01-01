@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const decodeToken = (token) =>{
+const decodeToken = async (token) =>{
     const decoded = jwt.verify(token, 'nossosecret')
     return decoded
 }

@@ -21,38 +21,58 @@ module.exports = class PetController {
         //service call
         try {
             const PetServiceInstance = new PetService()
-            const {newPet, message} = await PetServiceInstance.serviceCreate(name, age, weight, color, images, available, token)
-            if(message){
-                return res.status(422).json({ message: message }) 
-            }
+            const newPet = await PetServiceInstance.serviceCreate(name, age, weight, color, images, available, token)
             return res.status(200).json({ newPet, message: 'Pet cadastrado com sucesso'})
         } catch (error) {
-            return res.status(422).json({ message: 'falha ao registrar o pet' })
-        }           
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
     }
     static async getAll(req, res){
         try {
             const PetServiceInstance = new PetService()
-            const {petList, message} = await PetServiceInstance.serviceGetAll()
-            if(message){
-                return res.status(422).json({ message: message }) 
-            }
+            const petList = await PetServiceInstance.serviceGetAll()
             return res.status(200).json({ petList })
         } catch (error) {
-            return res.status(422).json({ message: 'falha buscar por pets' })
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
         }
     }
     static async getAllUserPets(req, res){
+
+        const token = getToken(req)
+        
+        try {
+            const PetServiceInstance = new PetService()
+            const pets = await PetServiceInstance.serviceGetAllUserPets(token)
+            return res.status(200).json({ pets })
+        } catch (error) {
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
+    }
+    static async getMyAdoptions(req, res){
         const token = getToken(req)
         try {
             const PetServiceInstance = new PetService()
-            const {pets, message} = await PetServiceInstance.serviceGetAllUserPets(token)
-            if(message){
-                return res.status(422).json({ message: message }) 
-            }
+            const pets = await PetServiceInstance.serviceGetMyAdoptions(token)
+
             return res.status(200).json({ pets })
         } catch (error) {
-            return res.status(422).json({ message: 'falha buscar por pets do usuario' })
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } });
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } });
+            }
         }
     }
 }

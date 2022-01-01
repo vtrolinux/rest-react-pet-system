@@ -1,26 +1,15 @@
 const User = require('../models/User')
 const Pet = require('../models/Pet')
 const decodeToken = require('../helpers/decode-token')
+const getUserByDecodedToken = require('../helpers/get-user-by-decoded-token')
+
 
 module.exports = class PetService {
 
     async serviceCreate(name, age, weight, color, images, available, token){
-        //get pet ownner
+        
         const decoded = await decodeToken(token)
-        const userId = decoded.id
-        console.log('userId: ' +userId)
-        if(!userId){
-            return {message: 'acesso negado!'}
-        }
-        const user = await User.findOne({_id: userId})
-        //console.log('userId: '+userId+ ' user._id: '+user._id)
-        if(!user){
-            return {message: 'usuario nao encontrado!'}
-        }   
-        if(userId != user._id){
-            console.log('userId: '+userId+ ' user._id: '+user._id)
-            return {message: 'acesso negado!'}
-        }
+        const user = await getUserByDecodedToken(decoded)
 
         const dataPetCreate = new Pet({
             name,
@@ -40,46 +29,38 @@ module.exports = class PetService {
             dataPetCreate.images.push(image.filename)
         })
         //persist
-        try {
+        try {   
             const newPet = await dataPetCreate.save()
-            return {newPet}
+            return newPet
         } catch (error) {
-            return {message: 'Falha ao registrar o pet'}
+            throw ({ status: 422, code: 'PET_NOT_SAVE', message: 'Falha ao registrar o pet..' })
         }
     }
     
     async serviceGetAll(){
         try {
             const petList = await Pet.find().sort('-createdAt')//do mais novo para o mais velho
-            return {petList}
+            return petList
         } catch (error) {
-            return {message: 'Falha ao buscar por pets!'}
+            throw ({ status: 422, code: 'PETS_NOT_FOUND', message: 'Falha ao buscar por pets..' })
         }
     }
     async serviceGetAllUserPets(token){
-        const decoded = decodeToken(token)
-        const userId = decoded.id
-        console.log('userId: ' +userId)
-        
-        if(!userId){
-            return {message: 'acesso negado!'}
-        }
-        const user = await User.findOne({_id: userId})
-        
-        if(!user){
-            return { message: 'usuario nao encontrado!' }
-        }   
-        if(userId != user._id){
-            console.log('userId: '+userId+ ' user._id: '+user._id)
-            return { message: 'acesso negado!' }
-        }
+
+        const decoded = await decodeToken(token)
+        const user = await getUserByDecodedToken(decoded)
         
         try {        
             const pets = await Pet.find({'user._id': user._id}).sort('-createdAt')//do mais novo para o mais velho
             console.log(pets)
-            return {pets}
+            return pets
         } catch (error) {
-            return {message: 'Falha ao buscar por pets!'}
+            throw ({ status: 422, code: 'PETS_NOT_FOUND', message: 'Falha ao buscar por pets!' })
         }
+    }
+    
+    async serviceGetMyAdoptions(token){
+        //throw new Error('edoasasmd')
+        throw ({ status: 422, code: 'USER_ALREADY_EXISTS', message: 'This e-mail address is already taken.' })
     }
 }
