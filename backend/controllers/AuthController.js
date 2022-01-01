@@ -1,5 +1,6 @@
 const AuthService = require('../services/AuthService')
 const authValidators = require('../validations/authValidators')
+const getToken = require('../helpers/get-token')
 module.exports = class AuthController {
 
     static async register(req, res) {
@@ -16,14 +17,15 @@ module.exports = class AuthController {
         //service call
         try {
             const AuthServiceInstance = new AuthService()
-            const {token, userId, message} = await AuthServiceInstance.serviceRegister(name, email, phone, password, confirmpassword)
-            if(message){
-                return res.status(422).json({ message: message })     
-            }
+            const {token, userId} = await AuthServiceInstance.serviceRegister(name, email, phone, password, confirmpassword)
             return res.json({ message: "voce se cadastrou!", userId: userId ,token: token })
         } catch (error) {
-            return res.status(422).json({message: 'falha ao registrar usuario no sistema' })
-        }   
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
     }
     static async login(req, res){
 
@@ -39,14 +41,14 @@ module.exports = class AuthController {
         //service layer call
         try {
             const AuthServiceInstance = new AuthService()
-            const {token, userId,message} = await AuthServiceInstance.serviceLogin(email, password)
-            if(message){
-                return res.status(422).json({ message: message }) 
-            }
+            const {token, userId} = await AuthServiceInstance.serviceLogin(email, password)
             return res.json({ message: "voce efetuou o login!", token: token, userId: userId})
         } catch (error) {
-            return res.status(422).json({message: 'falha ao realizar o login' })
-            //return res.status(422).json(error.message)
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
         }  
     }
     static async checkAuth(req, res){
@@ -55,12 +57,14 @@ module.exports = class AuthController {
         
         try {
             const AuthServiceInstance = new AuthService()
-            const {currentUser, message} = await AuthServiceInstance.serviceCheckAuth(token)
-            if(message){return res.status(422).json({ message: message })}
-
-            return res.status(200).json({message: 'ok', user: currentUser})
+            const currentUser = await AuthServiceInstance.serviceCheckAuth(token)
+            return res.status(200).json({user: currentUser})
         } catch (error) {
-            return res.status(422).json({message: 'falha de verificacao' })
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
         }
     }
 }

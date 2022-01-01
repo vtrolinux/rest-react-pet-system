@@ -11,7 +11,7 @@ module.exports = class AuthService {
         const emailExists = await User.findOne({ email: email })
         if (emailExists) {
             console.log("O email informado já está em uso")
-            return {message: 'O email informado já está em uso'}
+            throw ({ status: 422, code: 'USER_ALREADY_EXISTS', message: 'O email informado já está em uso.' })
         }
         
         // create password
@@ -30,26 +30,28 @@ module.exports = class AuthService {
             const {token, userId} = await createToken(newUser)
             return {token, userId}
         } catch (error) {
-            return 'Erro ao registrar usuario'
+            throw ({ status: 422, code: 'USER_ERROR_REGISTER', message: 'Erro ao registrar usuario.' })
         } 
     }
     async serviceLogin(email, password){
+
         console.log('login service: '+email)
         const user = await User.findOne({ email: email })
+
         if (user == null) {
-            return {message: 'nao  existe usuario cadastrado com este email'}
+            throw ({ status: 422, code: 'EMAIL_NOT_EXISTS', message: 'nao existe usuario cadastrado com este email.' })
         }
         //check match senha
         const checkPassword = await bcrypt.compare(password, user.password)
 
         if (!checkPassword) {
+            throw ({ status: 422, code: 'INVALID_PASSWORD', message: 'senha inválida.' })
             //throw new Error('SENHA INVALIDA')
-            return {message: 'senha inválida'}
         }
 
         const {token, userId} = await createToken(user)
 
-        return {token,userId}
+        return {token, userId}
     }
     async serviceCheckAuth(token){
 
@@ -61,11 +63,10 @@ module.exports = class AuthService {
             
             currentUser = await User.findById(decoded.id, {password: 0, phone:0})
             if(currentUser == null){
-                return { message: 'usuario nao encontrado' }
+                throw ({ status: 422, code: 'USER_NOT_FOUND', message: 'usuario nao encontrado.' })
             }
-            //currentUser.password = undefined
             console.log(currentUser)
-            return {currentUser}
+            return currentUser
         } else {
             currentUser = null
         }
