@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const decodeToken = require('../helpers/decode-token')
+const getUserByDecodedToken = require('../helpers/get-user-by-decoded-token')
 
 module.exports = class UserService {
     //constructor(){}
@@ -7,28 +8,15 @@ module.exports = class UserService {
     async serviceGetUserById(id){
         try {
             const user = await User.findById(id, {password: 0})
-            return {user}
+            return user
         } catch (error) {
-            return {message: 'usuario nao encontrado'}
+            throw ({ status: 422, code: 'USER_NOT_FOUND', message: 'Usuário não encontrado.' })          
         }
     }
     async serviceUpdateUser(token, name, email, phone, password, confirmpassword, image){
 
         const decoded = await decodeToken(token)
-        const userId = decoded.id
-        console.log('userId: ' +userId)
-        if(!userId){
-            return {message: 'acesso negado!'}
-        }
-        const user = await User.findOne({_id: userId})
-        //console.log('userId: '+userId+ ' user._id: '+user._id)
-        if(!user){
-            return {message: 'usuario nao encontrado!'}
-        }   
-        if(userId != user._id){
-            console.log('userId: '+userId+ ' user._id: '+user._id)
-            return {message: 'acesso negado!'}
-        }
+        const user = await getUserByDecodedToken(decoded)
         //Objeto de update do usuário
         const updateData = {
             name: name,
@@ -40,11 +28,11 @@ module.exports = class UserService {
             console.log('email:'+email)
             const emailExists = await User.findOne({email: email})
             if(emailExists && email !== user.email){
-                return {message: 'Este email ja esta sendo utilizado'}
+                throw ({ status: 422, code: 'EMAIL_ALREADY_EXISTS', message: 'Este email ja esta sendo utilizado.' })
             }    
         }
         if(password != confirmpassword){
-            return {message: 'as senhas nao sao iguais'}
+            throw ({ status: 422, code: 'PASSWORD_NOT_CONFIRMED', message: 'as senhas nao sao iguais.' })
         }else if (password == confirmpassword && password != null) {
             //change password
             const salt = await bcrypt.genSalt(12)
@@ -59,11 +47,11 @@ module.exports = class UserService {
 
         // persist update
         try {
-            const updatedUser = await User.findOneAndUpdate({ _id: userId }, { $set: updateData }, { new: true }).select({password: 0, __v: 0 })
+            const updatedUser = await User.findOneAndUpdate({ _id: user._id }, { $set: updateData }, { new: true }).select({password: 0, __v: 0 })
             console.log(updatedUser)
-            return {updatedUser}
+            return updatedUser
         } catch (error) {
-            return {message: 'falha de atualizacao'}
+            throw ({ status: 422, code: 'UPDATE_USER_FAILED', message: 'falha de atualizacao.' })
         }
     }
 }

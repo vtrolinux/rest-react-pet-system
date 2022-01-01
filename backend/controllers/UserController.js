@@ -1,25 +1,23 @@
 const UserService = require('../services/UserService')
-
+const getToken = require('../helpers/get-token')
 module.exports = class UserController {
     static async getUserById(req, res){
         const id = req.params.id
         try {
             const UserServiceInstance = new UserService()
-            const {user, message} = await UserServiceInstance.serviceGetUserById(id)
-            if(message){
-                return res.status(422).json({message: message})
-            }
+            const user = await UserServiceInstance.serviceGetUserById(id)
             return res.status(200).json({ user: user })
         } catch (error) {
-            return res.status(422).json({message: 'Erro ao buscar pelo usuario informado'})
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
         }
     }
     static async updateUser(req, res){
         
-        const authHeader = req.headers["authorization"]
-        console.log('auth header: '+authHeader)
-        const token = authHeader && authHeader.split(" ")[1]
-        console.log('TOKEN: '+token)
+        const token = getToken(req)
         const {name, email, phone, password, confirmpassword} = req.body
         let image = ''
 
@@ -30,13 +28,14 @@ module.exports = class UserController {
 
         try {
             const UserServiceInstance = new UserService()
-            const {updatedUser, message} = await UserServiceInstance.serviceUpdateUser(token,name, email, phone, password, confirmpassword, image)
-            if(message){
-                return res.status(422).json({message: message}) 
-            }
+            const updatedUser = await UserServiceInstance.serviceUpdateUser(token,name, email, phone, password, confirmpassword, image)
             return res.status(200).json({ updatedUser: updatedUser })
         } catch (error) {
-            return res.status(422).json({message: 'Erro ao atualizar usuario'}) 
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
         }
     }
 }
