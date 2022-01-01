@@ -27,7 +27,7 @@ module.exports = class UserService {
         if(email){
             console.log('email:'+email)
             const emailExists = await User.findOne({email: email})
-            if(emailExists && email !== user.email){
+            if(email !== user.email && emailExists){
                 throw ({ status: 422, code: 'EMAIL_ALREADY_EXISTS', message: 'Este email ja esta sendo utilizado.' })
             }    
         }

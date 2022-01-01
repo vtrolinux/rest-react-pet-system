@@ -75,4 +75,20 @@ module.exports = class PetController {
             }
         }
     }
+    static async getPetById(req, res){
+        
+        const id = req.params.id
+
+        try {
+            const PetServiceInstance = new PetService()
+            const pet = await PetServiceInstance.serviceGetPetById(id)
+            return res.status(200).json({ pet })
+        } catch (error) {
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } });
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } });
+            }
+        }
+    }
 }
