@@ -13,5 +13,7 @@ router.get('/myadoptions', checkToken, PetController.getMyAdoptions)
 router.get('/:id', PetController.getPetById)
 router.delete('/:id', checkToken, PetController.removePetById)
 router.patch('/edit/:id', checkToken, imageUpload.array('images'), PetController.updatePet)
+//agendamento de visita para adocao
+router.patch('/schedule/:id', checkToken, PetController.schedule)
 
 module.exports = router

@@ -3,6 +3,7 @@ const Pet = require('../models/Pet')
 const decodeToken = require('../helpers/decode-token')
 const getUserByDecodedToken = require('../helpers/get-user-by-decoded-token')
 const ObjectId = require('mongoose').Types.ObjectId
+const { findByIdAndUpdate } = require('../models/User')
 
 module.exports = class PetService {
 
@@ -146,9 +147,41 @@ module.exports = class PetService {
         } catch (error) {
             throw ({ status: 422, code: 'PET_USER_FAILED', message: 'falha de atualizacao.' })
         }
+    }
 
-        
+    async serviceSchedule(token, id){
 
+        const decoded = await decodeToken(token)
+        const user = await getUserByDecodedToken(decoded)
+
+        //check se pet existe
+        const pet = await Pet.findOne({_id: id})
+        if(pet===null){
+            throw ({ status: 404, code: 'PET_NOT_FOUND', message: 'Nao existe pet registrado com este ID ou talvez nao esteja mais disponivel para adocao' })
+        }
+        //nao permitir que o doador adote o proprio pet
+        if(pet.user._id.toString() === user._id.toString()){
+            throw ({ status: 422, code: 'DENIED_OPERATION', message: 'Operaçao negada, voce nao pode adotar o proprio pet' })
+        }
+        //verifica se o pet ja possui uma solicitacao de visita pelo mesmo usuario
+        if(pet.adopter){
+            if(pet.adopter._id.toString() === user._id.toString()){
+                throw ({ status: 422, code: 'DENIED_OPERATION', message: 'Você já agendou uma visita para este Pet!' })
+            }
+        }
+        // adicionar 'adopter' document ao pet
+        pet.adopter = {
+            _id: user._id,
+            name: user.name,
+            image: user.image
+        }
+        console.log(pet)
+        try {
+            await Pet.findByIdAndUpdate(pet._id, pet) 
+            return {messageSchedule: `A visita foi agendada com sucesso, entre em contato com ${pet.user.name} no telefone: ${pet.user.phone}`}
+        } catch (error) {
+            throw ({ status: 422, code: 'FAILED_OPERATION', message: 'Falha ao realizar um agendamento!' })
+        }
 
     }
 }

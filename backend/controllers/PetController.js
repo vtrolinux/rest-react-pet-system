@@ -130,4 +130,20 @@ module.exports = class PetController {
             }
         }
     }
+    //agendamento de visita para adocao
+    static async schedule(req, res){
+        const token = getToken(req)
+        const id = req.params.id
+        try {
+            const PetServiceInstance = new PetService()
+            const messageSchedule = await PetServiceInstance.serviceSchedule(token, id)
+            return res.status(200).json({ message: messageSchedule })
+        } catch (error) {
+            if(!error.status) {
+                return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
+            } else {
+                return res.status(error.status).json( { error: { code: error.code, message: error.message } })
+            }
+        }
+    }
 }
