@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 //componentes
 import NavBar from './components/layouts/NavBar'
 import Footer from './components/layouts/Footer'
+import Container from './components/layouts/Container'
 //pages
 import Login from './components/pages/Auth/login'
 import Register from './components/pages/Auth/register'
@@ -11,17 +12,19 @@ function App() {
   return (
     <Router>
       <NavBar />
-      <Switch>
-        <Route path='/login'>
-          <Login />
-        </Route>
-        <Route path='/register'>
-          <Register />
-        </Route>
-        <Route path='/'>
-          <Home />
-        </Route>
-      </Switch>
+        <Container>
+          <Switch>
+            <Route path='/login'>
+              <Login />
+            </Route>
+            <Route path='/register'>
+              <Register />
+            </Route>
+            <Route path='/'>
+              <Home />
+            </Route>
+          </Switch>
+        </Container>
       <Footer />
     </Router>
   )
