@@ -1,9 +1,11 @@
 import {Link} from 'react-router-dom'
-import logo from '../../assets/img/Cat.gif'
+import styles from './NavBar.module.css'
+import logo from '../../assets/img/petlogo.png'
+
 function NavBar(){
     return (
-        <nav>
-            <div>
+        <nav className={styles.navbar}>
+            <div className={styles.navbar_logo}>
                 <img src={logo} alt='pet system'/>
                 <h2>Pet System</h2>
             </div>
