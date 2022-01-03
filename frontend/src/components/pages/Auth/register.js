@@ -1,16 +1,27 @@
 import Input from "../../form/Input"
 import { Link } from 'react-router-dom'
+import {useState} from 'react'
 //css de todos os formularios
 import styles from '../../form/Form.module.css'
 
 function Register(){
+
+    const [user, setUser] = useState({})//inicializa o estado do objeto
+    
     function handleOnChange(e) {
-        
+        /*sempre que muda uma letra no valor do input e' alterado o valor da propriedade,
+        formando o obj que sera enviado para o backend*/
+        setUser({...user,[e.target.name]: e.target.value})
+    }
+    function handleSubmit(e) {
+        e.preventDefault()
+        //send
+        console.log(user)
     }
     return (
         <section className={styles.form_container}>
             <h1>Register</h1>
-            <form>
+            <form onSubmit={handleSubmit}>
             <Input
                 text='Nome'
                 type='text'
