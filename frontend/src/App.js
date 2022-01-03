@@ -7,25 +7,29 @@ import Container from './components/layouts/Container'
 import Login from './components/pages/Auth/login'
 import Register from './components/pages/Auth/register'
 import Home from './components/pages/Home'
+//contexts
+import {UserProvider} from './context/UserContext'
 
 function App() {
   return (
     <Router>
-      <NavBar />
-        <Container>
-          <Switch>
-            <Route path='/login'>
-              <Login />
-            </Route>
-            <Route path='/register'>
-              <Register />
-            </Route>
-            <Route path='/'>
-              <Home />
-            </Route>
-          </Switch>
-        </Container>
-      <Footer />
+      <UserProvider>
+        <NavBar />
+          <Container>
+            <Switch>
+              <Route path='/login'>
+                <Login />
+              </Route>
+              <Route path='/register'>
+                <Register />
+              </Route>
+              <Route path='/'>
+                <Home />
+              </Route>
+            </Switch>
+          </Container>
+        <Footer />
+      </UserProvider>
     </Router>
   )
 }
