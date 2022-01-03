@@ -1,13 +1,16 @@
 import Input from "../../form/Input"
 import { Link } from 'react-router-dom'
-import {useState} from 'react'
+import {useState, useContext} from 'react'
+//contexts
+import {Context} from '../../../context/UserContext'
 //css de todos os formularios
 import styles from '../../form/Form.module.css'
 
 function Register(){
 
     const [user, setUser] = useState({})//inicializa o estado do objeto
-    
+    const { register } = useContext(Context)
+
     function handleOnChange(e) {
         /*sempre que muda uma letra no valor do input e' alterado o valor da propriedade,
         formando o obj que sera enviado para o backend*/
@@ -17,6 +20,7 @@ function Register(){
         e.preventDefault()
         //send
         console.log(user)
+        register(user)
     }
     return (
         <section className={styles.form_container}>
