@@ -8,7 +8,7 @@ export default function useAuth(){
     const { setFlashMessage } = useFlashMessage()
     const history = useHistory()
 
-    //effect que insere o token na api automaticamente para as requests
+    //effect que insere o token no header automaticamente para as requests
     useEffect(() => {
         const token = localStorage.getItem('token')
         if(token){
