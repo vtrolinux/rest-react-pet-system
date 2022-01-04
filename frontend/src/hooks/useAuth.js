@@ -42,6 +42,20 @@ export default function useAuth(){
         localStorage.setItem('token', JSON.stringify(data.token))
         history.push('/')
     }
+    async function login(user){
+        let msgText = 'Login Efetuado com sucesso'
+        let msgType = 'success'
+        try {
+            
+            const data = await api.post('/auth/login', user).then((response) => { return response.data})
+            console.log(data)
+            await authUser(data) //autentica e persiste baseado na resposta do backend
+        } catch (error) {
+            msgText = error.response.data.error.message
+            msgType = 'error'
+        }
+        setFlashMessage(msgText, msgType)
+    }
     async function logout(){
         const msgText = 'Logout realizado com sucesso'
         const msgType = 'success'
@@ -53,5 +67,5 @@ export default function useAuth(){
         history.push('/')
         setFlashMessage(msgText, msgType)
     }
-    return { authenticated, register, logout }
+    return { authenticated, register, logout, login }
 }

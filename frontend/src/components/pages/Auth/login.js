@@ -8,14 +8,23 @@ import {Context} from  '../../../context/UserContext'
 
 function Login(){
 
-    function handleOnChange(e){
+    /* inicializacao de campo objeto vazio, que vai sendo alterado por alteraçao com o handleOnChange */
+    const [user, setUser] = useState({})
+    const {login} = useContext(Context)//funcao login
 
+    function handleOnChange(e){
+        setUser({...user,[e.target.name]: e.target.value})
+        //console.log(user)//browser
+    }
+    function handleSubmit(e){
+        e.preventDefault()
+        login(user)//dispara a funcao login importada enviado o usuario preenchido
     }
 
     return (
         <section className={styles.form_container}>
             <h1>Login</h1>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <Input
                     text='E-mail'
                     type='email'
