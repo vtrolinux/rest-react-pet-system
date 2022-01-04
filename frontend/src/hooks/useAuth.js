@@ -8,6 +8,15 @@ export default function useAuth(){
     const { setFlashMessage } = useFlashMessage()
     const history = useHistory()
 
+    //effect que insere o token na api automaticamente para as requests
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        if(token){
+            api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`
+            setAuthenticated(true)
+        }
+    }, [])
+
     async function register(user){
 
         let msgMessage = 'Cadastro realizado com sucesso'
@@ -33,5 +42,5 @@ export default function useAuth(){
         localStorage.setItem('token', JSON.stringify(data.token))
         history.push('/')
     }
-    return { register }
+    return { authenticated, register }
 }
