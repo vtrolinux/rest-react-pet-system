@@ -3,10 +3,12 @@ import styles from './Profile.module.css'
 import Input from '../../form/Input'
 import {useState, useEffect} from 'react'
 import api from '../../../utils/api'
+import useFlashMessage from '../../../hooks/useFlashMessage'
 
 function Profile(){
     const [user, setUser] = useState({})
     const [token] = useState(localStorage.getItem('token') || '')
+    const { setFlashMessage } = useFlashMessage()
     //useEffect pra carregar o usuario do back-end e preencher formulario
     //depende do token para acessar api
     useEffect(() => {
@@ -18,10 +20,37 @@ function Profile(){
     }, [token])
 
     function onFileChange(e){
-
+        setUser({...user,[e.target.name]: e.target.files[0]})
     }
     function handleChange(e){
+        setUser({...user,[e.target.name]: e.target.value})
+        //console.log(user)
+    }
+    async function handleSubmit(e){
 
+        e.preventDefault()
+
+        let msgType = 'success'
+
+        //por ter imagem, o uso do formData
+        const formData = new FormData()
+        //transfere os valores do obj o form data
+        Object.keys(user).forEach((key) => formData.append(key, user[key]))
+        
+        const data = await api.patch(`/users/edit/${user._id}`, formData, {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(token)}`,
+              'Content-Type': 'multipart/form-data',
+            },
+        }).then((response) => { 
+            return response.data
+        }).catch((error) => {
+            console.log(error)
+            msgType = 'error'
+            return error.response.data
+        })
+        console.log(data)
+        setFlashMessage(data.message, msgType)
     }
 
     return (
@@ -30,7 +59,7 @@ function Profile(){
             <h1>Profile</h1>
             <p>Preview de imagem:</p>
         </div>
-            <form className={formStyles.form_container}>
+            <form onSubmit={handleSubmit} className={formStyles.form_container}>
                 <Input 
                     text='Imagem'
                     type='file'

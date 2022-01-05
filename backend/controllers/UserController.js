@@ -29,7 +29,7 @@ module.exports = class UserController {
         try {
             const UserServiceInstance = new UserService()
             const updatedUser = await UserServiceInstance.serviceUpdateUser(token,name, email, phone, password, confirmpassword, image)
-            return res.status(200).json({ updatedUser: updatedUser })
+            return res.status(200).json({ message: 'Usuário atualizado com sucesso!', updatedUser: updatedUser })
         } catch (error) {
             if(!error.status) {
                 return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
