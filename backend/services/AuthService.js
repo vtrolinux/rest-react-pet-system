@@ -61,7 +61,7 @@ module.exports = class AuthService {
             const decoded = await decodeToken(token)
             console.log('decoded: '+decoded.id)
             
-            currentUser = await User.findById(decoded.id, {password: 0, phone:0})
+            currentUser = await User.findById(decoded.id, {password: 0})
             if(currentUser == null){
                 throw ({ status: 422, code: 'USER_NOT_FOUND', message: 'usuario nao encontrado.' })
             }

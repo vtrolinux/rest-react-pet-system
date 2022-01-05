@@ -2,10 +2,21 @@ import formStyles from '../../form/Form.module.css'
 import styles from './Profile.module.css'
 import Input from '../../form/Input'
 import {useState, useEffect} from 'react'
+import api from '../../../utils/api'
 
 function Profile(){
     const [user, setUser] = useState({})
+    const [token] = useState(localStorage.getItem('token') || '')
     //useEffect pra carregar o usuario do back-end e preencher formulario
+    //depende do token para acessar api
+    useEffect(() => {
+        api.get('/auth/checkauth',{
+            headers: {
+                Authorization: `Bearer ${JSON.parse(token)}`
+            }
+        }).then((response) => { setUser(response.data.user) })
+    }, [token])
+
     function onFileChange(e){
 
     }
