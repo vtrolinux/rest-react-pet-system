@@ -9,6 +9,7 @@ import Login from './components/pages/Auth/login'
 import Register from './components/pages/Auth/register'
 import Home from './components/pages/Home'
 import Profile from './components/pages/User/profile'
+import Mypets from  './components/pages/Pet/MyPets'
 //contexts
 import {UserProvider} from './context/UserContext'
 
@@ -28,6 +29,9 @@ function App() {
               </Route>
               <Route path='/user/profile'>
                 <Profile />
+              </Route>
+              <Route path='/pet/mypets'>
+                <Mypets />
               </Route>
               <Route path='/'>
                 <Home />
