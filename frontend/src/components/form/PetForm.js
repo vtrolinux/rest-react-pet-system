@@ -23,7 +23,7 @@ function PetForm({handleSubmit,petData, btnText}){
     function submit(e){
         e.preventDefault()
         console.log(pet)
-        //handleSubmit(pet)
+        handleSubmit(pet)
     }
 
     return (
@@ -47,7 +47,7 @@ function PetForm({handleSubmit,petData, btnText}){
                     />
                 ))}
             </div>
-            
+
             <Input
                 text="Imagens do Pet"
                 type="file"
