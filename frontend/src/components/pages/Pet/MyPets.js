@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import api from '../../../utils/api'
 
 import RoundedImage from '../../layouts/RoundedImage'
+import styles from './Dashboard.module.css'
 /* hooks */
 import useFlashMessage from '../../../hooks/useFlashMessage'
 
@@ -18,17 +19,30 @@ function MyPets(){
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
         }}).then((response) => {
-            console.log(response.data.pets)
             setPets(response.data.pets)
         })
     },[token])//dependencia
 
     return (
         <section>
-            <h1>MyPets</h1>
-            <Link to='/pet/add'> Cadastrar Pet </Link>
             <div>
-                {pets.length > 0 && ( <p>meus pets cadastrados </p> )}
+                <h1>MyPets</h1>
+                <Link to='/pet/add'> Cadastrar Pet </Link>
+            </div>
+            <div>    
+                {pets.length > 0 && pets.map((pet) => (
+                    <div key={pet._id}>
+                        <RoundedImage
+                            src={`${process.env.REACT_APP_API}/images/pets/${pet.images[0]}`}
+                            alt={pet.name}
+                            width='px75'
+                        />
+                        <span className="bold">{pet.name}</span>
+                        <div className={styles.actions}>
+                            {pet.available ? (<p>Ainda em adoção</p>):(<p>Pet já adotado</p>)}
+                        </div>
+                    </div>
+                ))}
                 {pets.length === 0 && ( <p>voce nao possui pets cadastrados </p> )}
             </div>
         </section>
