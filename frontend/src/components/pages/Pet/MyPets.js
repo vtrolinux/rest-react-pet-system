@@ -23,6 +23,28 @@ function MyPets(){
         })
     },[token])//dependencia
 
+    async function removePet(id){
+        let msgType = 'success'
+
+        const data = await api.delete(`/pets/${id}`, {
+            headers: {
+                Authorization: `Bearer ${JSON.parse(token)}`,
+            }
+        }).then((response) => {
+            //returna todos os pets que ja existiam no front, exceto o id excluido, evita comunicacao desnecessaria com o backend
+            const updatedPets = pets.filter((pet) => pet._id !== id)
+            console.log(response.data)
+            setPets(updatedPets)
+            return response.data
+        }).catch((error) => {
+            console.log(error)
+            console.log('catch')
+            msgType = 'error'
+            return error.response.data.error
+        })
+        setFlashMessage(data.message, msgType)
+    }
+
     return (
         <section>
             <div className={styles.petslist_header}>
@@ -43,7 +65,11 @@ function MyPets(){
                             <>
                                 {pet.adopter && ( <button className={styles.conclude_btn} >Concluir Adoção</button> )}
                                 <Link to={`/pet/edit/${pet._id}`}>Editar</Link>
-                                <button>Excluir</button>
+                                <button onClick={
+                                    () => {
+                                        removePet(pet._id)
+                                    }
+                                }>Excluir</button>
                             </>)
                             ):(<p>Pet já adotado</p>)}
                         </div>
