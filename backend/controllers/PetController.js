@@ -121,7 +121,7 @@ module.exports = class PetController {
         try {
             const PetServiceInstance = new PetService()
             const updatedPet = await PetServiceInstance.serviceUpdatePet(token, id, name, age, weight, color, available, images)
-            return res.status(200).json({updatedPet: updatedPet})
+            return res.status(200).json({updatedPet: updatedPet, message: 'Pet Atualizado com sucesso!'})
         } catch (error) {
             if(!error.status) {
                 return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })

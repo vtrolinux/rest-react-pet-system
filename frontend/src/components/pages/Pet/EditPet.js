@@ -21,7 +21,33 @@ function EditPet(){
     }, [token, id]) //dependencias
 
     async function updatePet(pet){
+        let msgType = 'success'
 
+        const formData = new FormData()
+
+        await Object.keys(pet).forEach((key) => {
+            if (key === 'images') {
+                for (let i = 0; i < pet[key].length; i++) {
+                    formData.append(`images`, pet[key][i])
+                }
+            } else {
+                formData.append(key, pet[key])
+            }
+        })
+
+        const data = await api.patch(`pets/edit/${pet._id}`, formData, {
+            headers:{
+                Authorization: `Bearer ${JSON.parse(token)}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then((response) => {
+            console.log(response.data)
+            return response.data
+        }).catch((error) => {
+            msgType = 'error'
+            return error.response.data
+        })
+        setFlashMessage(data.message, msgType)
     }
 
     return (

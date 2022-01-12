@@ -119,10 +119,11 @@ module.exports = class PetService {
         }
 
         const pet = await Pet.findOne({_id: id})
+        console.log(pet)
         if(pet===null){
             throw ({ status: 404, code: 'PET_NOT_FOUND', message: 'Nao existe pet registrado com este ID' })
         }
-        //verifica se o pet a ser deletado pertence ao usuario logado
+        //verifica se o pet a ser alterado pertence ao usuario logado
         if(pet.user._id.toString() !== user._id.toString()){
             throw ({ status: 422, code: 'DENIED_OPERATION', message: 'Operaçao negada' })
         }
@@ -133,7 +134,7 @@ module.exports = class PetService {
             color: color,
             available: available
         }
-        if(images){
+        if(images.length > 0){
 
             updateData.images = []
 
@@ -142,7 +143,7 @@ module.exports = class PetService {
             })
         }
         try {
-            const updatedPet = await Pet.findOneAndUpdate({ 'user._id': user._id }, { $set: updateData }, { new: true })
+            const updatedPet = await Pet.findOneAndUpdate({ _id: id, 'user._id': user._id }, { $set: updateData }, { new: true })
             return updatedPet
         } catch (error) {
             throw ({ status: 422, code: 'PET_USER_FAILED', message: 'falha de atualizacao.' })
