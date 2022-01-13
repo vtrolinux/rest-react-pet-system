@@ -4,6 +4,8 @@ import logo from '../../assets/img/petlogo.png'
 //context
 import { useContext } from 'react'
 import { Context } from '../../context/UserContext'
+import { FaPaw } from 'react-icons/fa';
+
 
 function NavBar(){
 
@@ -13,7 +15,7 @@ function NavBar(){
         <nav className={styles.navbar}>
             <div className={styles.navbar_logo}>
                 <img src={logo} alt='pet system'/>
-                <h2>Pet System</h2>
+                <h2>Pet System <FaPaw /></h2>
             </div>
             <ul>
                 <li>

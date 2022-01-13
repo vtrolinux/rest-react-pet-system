@@ -6,6 +6,7 @@ import RoundedImage from '../../layouts/RoundedImage'
 import styles from './Dashboard.module.css'
 /* hooks */
 import useFlashMessage from '../../../hooks/useFlashMessage'
+import {FaDog} from 'react-icons/fa';
 
 function MyPets(){
 
@@ -48,7 +49,7 @@ function MyPets(){
     return (
         <section>
             <div className={styles.petslist_header}>
-                <h1>MyPets</h1>
+                <h1> <FaDog /> Meus Pets </h1>
                 <Link to='/pet/add'> Cadastrar Pet </Link>
             </div>
             <div className={styles.petslist_container}>    

@@ -5,6 +5,7 @@ import {useState, useEffect} from 'react'
 import api from '../../../utils/api'
 import useFlashMessage from '../../../hooks/useFlashMessage'
 import RoundedImage from '../../layouts/RoundedImage'
+import {FaUserAlt} from 'react-icons/fa'
 
 function Profile(){
     const [user, setUser] = useState({})
@@ -59,7 +60,7 @@ function Profile(){
     return (
         <section>
         <div className={styles.profile_header}>
-            <h1>Profile</h1>
+            <h1> <FaUserAlt/> Profile</h1>
             {(user.image || preview) && (
                 <RoundedImage src={ preview ? URL.createObjectURL(preview) : `${process.env.REACT_APP_API}/images/users/${user.image}` } alt={user.name}/>
             )}
