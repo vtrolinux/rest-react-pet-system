@@ -24,7 +24,7 @@ function App() {
         <Message />
           <Container>
             <Switch>
-              
+
               <Route path='/login'>
                 <Login />
               </Route>
@@ -40,12 +40,13 @@ function App() {
               <Route path='/pet/add'>
                 <AddPet />
               </Route>
-              <Route path='/pet/:id'>
-                <PetDetails />
-              </Route>
               <Route path='/pet/edit/:id'>
                 <EditPet />
               </Route>
+              <Route path='/pet/:id'>
+                <PetDetails />
+              </Route>
+              
               <Route path='/'>
                 <Home />
               </Route>

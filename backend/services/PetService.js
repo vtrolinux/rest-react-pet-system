@@ -74,7 +74,7 @@ module.exports = class PetService {
         }    
     }
     async serviceGetPetById(id){
-
+        console.log(id)
         if(!ObjectId.isValid(id)){
             throw ({ status: 422, code: 'INVALID_ID', message: 'O id informado não é valido' })
         }

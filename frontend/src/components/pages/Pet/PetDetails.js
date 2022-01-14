@@ -19,10 +19,37 @@ function PetDetails(){
         })
     },[id])
 
+    async function schedule() {
+        
+    }
+
     return(
-        <section>
-            <h1>Detalhes do Pet: {pet.name}</h1>
-        </section>
+        <>
+            {pet.name && (
+                <section>
+                    <div>
+                        <h1>Conhecendo o Pet: {pet.name}</h1>
+                        <p>Se tiver interesse, marque uma visita para conhecê-lo!</p>
+                    </div>
+
+                    <div>
+                        {pet.images.map((image, index) => (
+                            <img src={`${process.env.REACT_APP_API}/images/pets/${image}`} alt={pet.name} key={index} />
+                        ))}
+                    </div>
+                    <p> <span className="bold">Peso:</span> {pet.weight}kg </p>
+                    <p> <span className="bold">Idade:</span> {pet.age} anos </p>
+                    {token ? (
+                        <button onClick={schedule}>Solicitar uma Visita</button>
+                    ) : (
+                        <p>
+                        Você precisa <Link to="/register">criar uma conta</Link> para
+                        solicitar a visita.
+                        </p>
+                    )}
+                </section>
+            )}
+        </>
     )
 }
 
