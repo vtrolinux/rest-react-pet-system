@@ -20,7 +20,22 @@ function PetDetails(){
     },[id])
 
     async function schedule() {
-        
+        let msgType = 'success'
+
+        const data = await api.patch(`pets/schedule/${pet._id}`, {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(token)}`,
+            },
+        }).then((response) => {
+            console.log(response.data)
+            return response.data.message
+        }).catch((err) => {
+            console.log(err)
+            msgType = 'error'
+            return err.response.data.error
+        })
+    
+        setFlashMessage(data.message, msgType)
     }
 
     return(

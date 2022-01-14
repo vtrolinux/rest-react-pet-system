@@ -179,7 +179,7 @@ module.exports = class PetService {
         console.log(pet)
         try {
             await Pet.findByIdAndUpdate(pet._id, pet) 
-            return {messageSchedule: `A visita foi agendada com sucesso, entre em contato com ${pet.user.name} no telefone: ${pet.user.phone}`}
+            return {message: `A visita foi agendada com sucesso, entre em contato com ${pet.user.name} no telefone: ${pet.user.phone}`}
         } catch (error) {
             throw ({ status: 422, code: 'FAILED_OPERATION', message: 'Falha ao realizar um agendamento!' })
         }

@@ -45,8 +45,7 @@ function App() {
               </Route>
               <Route path='/pet/:id'>
                 <PetDetails />
-              </Route>
-              
+              </Route>    
               <Route path='/'>
                 <Home />
               </Route>
