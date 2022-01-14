@@ -19,6 +19,9 @@ function NavBar(){
             </div>
             <ul>
                 <li>
+                    <Link to='/pet/myadoptions'>Minhas Adoções</Link>
+                </li>
+                <li>
                     <Link to='/'>Adotar</Link>
                 </li>
                 {authenticated ? 
