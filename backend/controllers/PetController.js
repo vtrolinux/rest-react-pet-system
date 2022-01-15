@@ -136,8 +136,8 @@ module.exports = class PetController {
         const id = req.params.id
         try {
             const PetServiceInstance = new PetService()
-            const messageSchedule = await PetServiceInstance.serviceSchedule(token, id)
-            return res.status(200).json({ message: messageSchedule })
+            const message = await PetServiceInstance.serviceSchedule(token, id)
+            return res.status(200).json({ message: message })
         } catch (error) {
             if(!error.status) {
                 return res.status(500).json( { error: { code: 'UNKNOWN_ERROR', message: 'An unknown error occurred.' } })
