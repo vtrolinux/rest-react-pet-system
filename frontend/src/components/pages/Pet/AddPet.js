@@ -2,7 +2,7 @@ import styles from './AddPet.module.css'
 import { FaPaw } from 'react-icons/fa';
 import api from '../../../utils/api'
 import {useState} from 'react'
-import {useHistory} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 /*Hooks*/
 import useFlashMessage from '../../../hooks/useFlashMessage'
@@ -12,7 +12,7 @@ import PetForm from '../../form/PetForm'
 function AddPet(){
     const [token] = useState(localStorage.getItem('token') || '')
     const {setFlashMessage} = useFlashMessage()
-    const history = useHistory()
+    const navigate = useNavigate()
 
     async function registerPet(pet){
         //pet recebido pelo componente filho
@@ -48,7 +48,7 @@ function AddPet(){
         setFlashMessage(data.message, msgType)
 
         if(msgType !== 'error'){
-            history.push('/pet/mypets')
+            navigate('/pet/mypets')
         }
     }
 

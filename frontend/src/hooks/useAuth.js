@@ -1,12 +1,12 @@
 import api from '../utils/api'
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import  useFlashMessage  from './useFlashMessage'
 
 export default function useAuth(){
     const [ authenticated, setAuthenticated] = useState(false)// inicializacao do estado de autenticacao
     const { setFlashMessage } = useFlashMessage()
-    const history = useHistory()
+    const navigate = useNavigate()
 
     //effect que insere o token no header automaticamente para as requests
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function useAuth(){
 
         setAuthenticated(true)
         localStorage.setItem('token', JSON.stringify(data.token))
-        history.push('/')
+        navigate('/')
     }
     async function login(user){
         let msgText = 'Login Efetuado com sucesso'
@@ -64,7 +64,7 @@ export default function useAuth(){
         localStorage.removeItem('token')
         api.defaults.headers.Authorization = undefined
 
-        history.push('/')
+        navigate('/')
         setFlashMessage(msgText, msgType)
     }
     return { authenticated, register, logout, login }
